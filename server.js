@@ -32,29 +32,28 @@ app.get("/api/shorturl/:id", ( req, res ) => {
   res.redirect(redirectUrl);
 })
 
-app.route("/api/shorturl/new")
-/*  .get((_req,res)=> {
-    res.json({
-      "original_url": "one",
-      "short_url": "two"
-    });
-  })*/
-  .post(urlencodedParser, (req,res) => {
+app.post("/api/shorturl/new",urlencodedParser, (req,res) => {
+  
     const url = req.body.url;
     const id = urlStore.length+1;
+    const regex = /^http|^https/;
 
-    if(validUrl.isUri(url)) {
+    // if valid url
+    if(regex.test(url)) {
+      //push to store
       urlStore.push({
         "original_url": url,
         "short_url": id
       })
-
+      // return json
       res.json({
         "original_url": url,
         "short_url": id
       });
+
     }
     else {
+      //else return error
       res.json({ "error": "invalid url" })
     }
 
